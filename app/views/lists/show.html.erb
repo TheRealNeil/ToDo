@@ -1,0 +1,39 @@
+<div class="page-header">
+  <%= link_to lists_path, class: 'btn btn-default' do %>
+    All Lists
+  <% end %>
+  <%= link_to edit_list_path(@list), class: 'btn btn-primary' do %>
+    Edit
+  <% end %>
+  <h1>Show list</h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name:</dt>
+  <dd><%= @list.name %></dd>
+
+  <dt>Description:</dt>
+  <dd><%= @list.description %></dd>
+
+  <dt>User:</dt>
+  <dd><%= "#{@list.user.first_name} #{@list.user.last_name}" %></dd>
+
+</dl>
+
+<h4>Items</h4>
+
+<div class="row">
+  <div class="col-1">Position</div>
+  <div class="col-4">Name</div>
+  <div class="col-6">Description</div>
+  <div class="col-1">Completed</div>
+</div>
+
+<% @list.items.each do |item| %>
+  <div class="row">
+    <div class="col-1"><%= item.position %></div>
+    <div class="col-4"><%= item.name %></div>
+    <div class="col-6"><%= item.description %></div>
+    <div class="col-1"><%= item.completed_at %></div>
+  </div>
+<% end %>

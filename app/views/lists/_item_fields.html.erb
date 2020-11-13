@@ -1,0 +1,13 @@
+<div class="row mb-2">
+  <div class="col-1"><%= form.number_field :position, class: 'form-control' %></div>
+  <div class="col-3"><%= form.text_field :name, class: 'form-control' %></div>
+  <div class="col-5"><%= form.text_field :description, class: 'form-control' %></div>
+  <div class="col-2"><%= form.datetime_field :completed_at, class: 'form-control' %></div>
+  <% if form.object.persisted? %>
+    <div class="btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-outline-danger">
+        <%= form.check_box :_destroy %>Destroy
+      </label>
+    </div>
+  <% end %>
+</div>

@@ -46,6 +46,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'administrate', github: 'excid3/administrate', branch: 'jumpstart'
+gem 'acts_as_list'
 gem 'bootstrap', '~> 4.5'
 gem 'devise', '~> 4.7', '>= 4.7.1'
 gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
