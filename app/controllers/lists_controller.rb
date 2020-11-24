@@ -15,40 +15,48 @@ class ListsController < ApplicationController
 
   # GET /lists/new
   def new
-    @list = List.new
+    @list = List.create(user: current_user)
+    redirect_to edit_list_path(@list)
   end
 
   # GET /lists/1/edit
   def edit
   end
 
-  # POST /lists
-  # POST /lists.json
-  def create
-    @list = List.new(list_params)
-    @list.user = current_user
-
-    respond_to do |format|
-      if @list.save
-        format.html { redirect_to @list, notice: 'List was successfully created.' }
-        format.json { render :show, status: :created, location: @list }
-      else
-        format.html { render :new }
-        format.json { render json: @list.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # # POST /lists
+  # # POST /lists.json
+  # def create
+  #   @list = List.new(list_params)
+  #   @list.user = current_user
+  #
+  #   respond_to do |format|
+  #     if @list.save
+  #       format.html { redirect_to @list, notice: 'List was successfully created.' }
+  #       format.json { render :show, status: :created, location: @list }
+  #     else
+  #       format.html { render :new }
+  #       format.json { render json: @list.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # PATCH/PUT /lists/1
   # PATCH/PUT /lists/1.json
   def update
+    @list.assign_attributes(list_params)
     respond_to do |format|
-      if @list.update(list_params)
+      if params[:commit] == "Update List" && @list.save
         format.html { redirect_to @list, notice: 'List was successfully updated.' }
         format.json { render :show, status: :ok, location: @list }
+        format.js   { redirect_to @list, notice: 'List was successfully updated.' }
+      elsif @list.save
+        format.html { redirect_to @list, notice: 'List was successfully updated.' }
+        format.json { render :show, status: :ok, location: @list }
+        format.js
       else
         format.html { render :edit }
         format.json { render json: @list.errors, status: :unprocessable_entity }
+        format.js { head :unprocessable_entity }
       end
     end
   end

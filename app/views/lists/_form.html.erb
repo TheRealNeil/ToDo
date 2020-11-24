@@ -1,4 +1,7 @@
-<%= form_with(model: list, local: true) do |form| %>
+<%= form_with(model: list, data: { controller: 'autosave',
+                                   action: "ajax:success->autosave#success ajax:error->autosave#error",
+                                   target: "autosave.form" }) do |form| %>
+
   <% if list.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(list.errors.count, "error") %> prohibited this list from being saved:</h2>
@@ -13,17 +16,21 @@
 
   <div class="form-group">
     <%= form.label :name %>
-    <%= form.text_field :name, class: 'form-control' %>
+    <%= form.text_field :name, class: 'form-control',
+                        data: { action: "keyup->autosave#save"}
+    %>
   </div>
 
   <div class="form-group">
     <%= form.label :description %>
-    <%= form.text_area :description, class: 'form-control' %>
+    <%= form.text_area :description, class: 'form-control',
+                       data: { action: "keyup->autosave#save"}
+    %>
   </div>
 
   <h4>Items</h4>
 
-  <div class="row">
+  <div class="row form-row">
     <div class="col-1"><%= form.label :position %></div>
     <div class="col-3"><%= form.label :name %></div>
     <div class="col-5"><%= form.label :description %></div>
@@ -36,7 +43,13 @@
   <% end %>
 
   <%= form.fields_for :items, Item.new do |task| %>
-    <%= render "item_fields", form: task %>
+    <div class="row form-row mb-2">
+      <div class="col-1"><%= task.number_field :position, class: 'form-control' %></div>
+      <div class="col-3"><%= task.text_field :name, class: 'form-control' %></div>
+      <div class="col-5"><%= task.text_field :description, class: 'form-control' %></div>
+      <div class="col-2"><%= task.datetime_field :completed_at, class: 'form-control' %></div>
+      <%= button_tag "Add", class: "btn btn-success", data: { action: "autosave#saveNow" } %>
+    </div>
   <% end %>
 
   <div class="form-group mt-4">
@@ -46,12 +59,13 @@
       </div>
     <% end %>
 
-    <%= form.submit class: 'btn btn-primary' %>
+    <%= form.submit "Update List", class: 'btn btn-primary' %>
 
     <% if list.persisted? %>
       <%= link_to "Cancel", list, class: "btn btn-link" %>
     <% else %>
       <%= link_to "Cancel", lists_path, class: "btn btn-link" %>
     <% end %>
+    <span class="text-muted" data-target="autosave.status"></span>
   </div>
 <% end %>

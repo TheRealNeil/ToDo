@@ -1,13 +1,15 @@
-<div class="row mb-2">
-  <div class="col-1"><%= form.number_field :position, class: 'form-control' %></div>
-  <div class="col-3"><%= form.text_field :name, class: 'form-control' %></div>
-  <div class="col-5"><%= form.text_field :description, class: 'form-control' %></div>
-  <div class="col-2"><%= form.datetime_field :completed_at, class: 'form-control' %></div>
+<div class="row form-row mb-2">
+  <div class="col-1"><%= form.number_field :position, class: 'form-control', data: { action: "keyup->autosave#save" } %></div>
+  <div class="col-3"><%= form.text_field :name, class: 'form-control', data: { action: "keyup->autosave#save" } %></div>
+  <div class="col-5"><%= form.text_field :description, class: 'form-control', data: { action: "keyup->autosave#save" } %></div>
+  <div class="col-2"><%= form.datetime_field :completed_at, class: 'form-control', data: { action: "keyup->autosave#save" } %></div>
   <% if form.object.persisted? %>
     <div class="btn-group-toggle" data-toggle="buttons">
       <label class="btn btn-outline-danger">
-        <%= form.check_box :_destroy %>Destroy
+        <%= form.check_box :_destroy, data: { action: "change->autosave#saveNow" } %>Remove
       </label>
     </div>
+  <% else %>
+    <%= button_tag "Add", class: "btn btn-success", data: { action: "autosave#saveNow" } %>
   <% end %>
 </div>
