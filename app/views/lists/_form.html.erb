@@ -1,7 +1,9 @@
 <%= form_with(model: list, data: { controller: 'autosave',
                                    action: "ajax:success->autosave#success ajax:error->autosave#error",
-                                   target: "autosave.form" }) do |form| %>
+                                   target: "autosave.form collaboration.form",
+                                   "collaboration-occupied-fieldsets": list.occupied_fieldsets.join(',')}) do |form| %>
 
+  <div id="user_presence" class="d-flex flex-row-reverse" data-permanent="true"></div>
   <% if list.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(list.errors.count, "error") %> prohibited this list from being saved:</h2>
@@ -17,14 +19,16 @@
   <div class="form-group">
     <%= form.label :name %>
     <%= form.text_field :name, class: 'form-control',
-                        data: { action: "keyup->autosave#save"}
+                        data: { action: "focus->collaboration#occupy blur->collaboration#vacate keyup->autosave#save",
+                                "collaboration-fieldset": "listName"}
     %>
   </div>
 
   <div class="form-group">
     <%= form.label :description %>
     <%= form.text_area :description, class: 'form-control',
-                       data: { action: "keyup->autosave#save"}
+                       data: { action: "focus->collaboration#occupy blur->collaboration#vacate keyup->autosave#save",
+                               "collaboration-fieldset": "listDescription"}
     %>
   </div>
 
@@ -44,11 +48,11 @@
 
   <%= form.fields_for :items, Item.new do |task| %>
     <div class="row form-row mb-2">
-      <div class="col-1"><%= task.number_field :position, class: 'form-control' %></div>
-      <div class="col-3"><%= task.text_field :name, class: 'form-control' %></div>
-      <div class="col-5"><%= task.text_field :description, class: 'form-control' %></div>
-      <div class="col-2"><%= task.datetime_field :completed_at, class: 'form-control' %></div>
-      <%= button_tag "Add", class: "btn btn-success", data: { action: "autosave#saveNow" } %>
+      <div class="col-1"><%= task.number_field :position, class: 'form-control', data: { action: "focus->collaboration#occupy blur->collaboration#vacate", "collaboration-fieldset": "listItems0" } %></div>
+      <div class="col-3"><%= task.text_field :name, class: 'form-control', data: { action: "focus->collaboration#occupy blur->collaboration#vacate", "collaboration-fieldset": "listItems0" } %></div>
+      <div class="col-5"><%= task.text_field :description, class: 'form-control', data: { action: "focus->collaboration#occupy blur->collaboration#vacate", "collaboration-fieldset": "listItems0" } %></div>
+      <div class="col-2"><%= task.datetime_field :completed_at, class: 'form-control', data: { action: "focus->collaboration#occupy blur->collaboration#vacate", "collaboration-fieldset": "listItems0" } %></div>
+      <%= button_tag "Add", class: "btn btn-success", data: { action: "autosave#saveNow", "collaboration-fieldset": "listItems0" } %>
     </div>
   <% end %>
 
@@ -66,6 +70,6 @@
     <% else %>
       <%= link_to "Cancel", lists_path, class: "btn btn-link" %>
     <% end %>
-    <span class="text-muted" data-target="autosave.status"></span>
+    <span class="text-muted" data-permanent="true" data-target="autosave.status"></span>
   </div>
 <% end %>

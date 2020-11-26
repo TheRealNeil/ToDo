@@ -1,4 +1,5 @@
 class ListsController < ApplicationController
+  include CableReady::Broadcaster
   before_action :authenticate_user!
   before_action :set_list, only: [:show, :edit, :update, :destroy]
 
@@ -52,7 +53,15 @@ class ListsController < ApplicationController
       elsif @list.save
         format.html { redirect_to @list, notice: 'List was successfully updated.' }
         format.json { render :show, status: :ok, location: @list }
-        format.js
+        format.js {
+          cable_ready[@list.stream_id].morph(
+              selector: '[data-controller="collaboration"]',
+              html: render_to_string(partial: "form", locals: { list: @list }),
+              children_only: true,
+              permanent_attribute_name: 'data-permanent'
+          )
+          cable_ready.broadcast
+        }
       else
         format.html { render :edit }
         format.json { render json: @list.errors, status: :unprocessable_entity }

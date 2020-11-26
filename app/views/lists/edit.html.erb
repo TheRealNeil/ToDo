@@ -1,3 +1,4 @@
 <h1>Edit List</h1>
-
-<%= render 'form', list: @list %>
+<%= content_tag :div, data: { controller: "collaboration", "collaboration-stream": @list.stream_id } do %>
+  <%= render 'form', list: @list %>
+<% end %>
