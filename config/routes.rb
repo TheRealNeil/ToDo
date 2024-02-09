@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :users, only: :index
   resources :lists
   get '/privacy', to: 'home#privacy'
   get '/terms', to: 'home#terms'

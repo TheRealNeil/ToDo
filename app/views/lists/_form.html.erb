@@ -28,6 +28,18 @@
     %>
   </div>
 
+  <div class="form-group" data-controller="autocomplete" data-autocomplete-minlength-value=1 data-autocomplete-url-value="/users">
+    <%= form.label :user_id, for: 'user_id' %>
+    <%= form.hidden_field :user_id, class: 'form-control', data: { autocomplete_target: 'valueField' } %>
+    <%= text_field_tag :user_id, form.object.user.name, class: 'form-control',
+                       data: { action: "keyup->autocomplete#search", autocomplete_target: 'textField'},
+                       autocomplete: "off"
+    %>
+    <ul class="d-none" data-autocomplete-target="results" style="border: 1px solid #ced4da; border-radius: 0.25rem; margin-top: 0.25rem; padding-left: 0px;">
+    </ul>
+  </div>
+
+
   <h4>Items</h4>
 
   <div class="row form-row">
